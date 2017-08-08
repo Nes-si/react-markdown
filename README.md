@@ -1,3 +1,10 @@
+> !!! This branch contains files related to RichMarkdownEditor
+
+  These files has been removed from "master" branch because markdown editor
+  hasn't been ready to use in "rich mode". 
+  
+  It backuped here for future if work on "rich mode" will be resumed someday.
+
 [![CircleCI Status](https://circleci.com/gh/OpusCapita/react-markdown/tree/master.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/OpusCapita/react-markdown)
 ![badge-npm-version](https://img.shields.io/npm/v/@opuscapita/react-markdown.svg) 
 ![badge-license](https://img.shields.io/github/license/OpusCapita/react-markdown.svg)
