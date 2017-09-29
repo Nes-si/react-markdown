@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { showroomScopeDecorator } from '@opuscapita/react-showroom-client';
+import { Modal, Button } from 'react-bootstrap';
 
 import text from './example.md';
 
@@ -13,14 +14,39 @@ export default
 class MarkdownInputScope extends React.Component {
   state = {
     markdownExample: text,
-    updatedMarkdown: ''
+    updatedMarkdown: '',
+    show: true
   };
 
   handleValueChange = (value) => {
     this.setState({ updatedMarkdown: value });
-  }
+  };
+
+  showModal = () => {
+    this.setState({ show: true });
+  };
+
+  hideModal = () => {
+    this.setState({ show: false });
+  };
 
   render() {
-    return this._renderChildren();
+    return (
+      <div>
+        <Button bsStyle='primary' onClick={this.showModal}>
+          Show
+        </Button>
+        <Modal show={this.state.show}
+               onHide={this.hideModal}
+        >
+          <Modal.Header closeButton={true}>
+            Modal Test
+          </Modal.Header>
+          <Modal.Body>
+            {this._renderChildren()}
+          </Modal.Body>
+        </Modal>
+      </div>
+    );
   }
 }

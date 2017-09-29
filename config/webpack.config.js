@@ -73,7 +73,7 @@ module.exports = {
     library: `MarkdownInput`,
     libraryTarget: 'umd'
   },
-  devtool: IS_PRODUCTION_MODE ? false : 'inline-source-map',
+  devtool: IS_PRODUCTION_MODE ? false : 'eval-source-map',
   watch: !IS_PRODUCTION_MODE,
   bail: true,
   plugins: plugins,

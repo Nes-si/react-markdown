@@ -67,7 +67,7 @@ Configurable extensions with autocomplete for **products**, **terms**, etc.
         termRegex: /^\$(\w*)$/,
         searchItems(term) {
           const items = [
-            {_objectLabel: 'a1'},
+            {_objectLabel: 'a1ckjgfcjfchfcytgjtgityuyitcfdtyfitcfitycfitcfitygckiyucviyuhvkyu'},
             {_objectLabel: 'a2'},
             {_objectLabel: 'a23'},
             {_objectLabel: 'b1'},
