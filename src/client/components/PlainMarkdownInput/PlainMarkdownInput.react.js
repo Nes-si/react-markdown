@@ -54,10 +54,6 @@ class PlainMarkdownInput extends React.Component {
   }
 
   handleChange = (obj) => {
-    if (this.props.readOnly) {
-      return;
-    }
-
     // XXX Slate "Editor.props.onChange" behavior changed
     // https://github.com/ianstormtaylor/slate/blob/master/packages/slate/Changelog.md#0220--september-5-2017
     let editorState = obj.state || obj;
@@ -81,10 +77,8 @@ class PlainMarkdownInput extends React.Component {
   }
 
   render() {
-    const { editorState } = this.state;
+    const { editorState, fullScreen } = this.state;
     const { children, extensions, readOnly } = this.props;
-
-    const fullScreen = this.props.fullScreen;
 
     let objectReferenceButtons = this.props.extensions.map((extension, index) => {
       return (
@@ -161,14 +155,12 @@ PlainMarkdownInput.propTypes = {
   value: Types.string,
   onChange: Types.func,
   onFullScreen: Types.func,
-  fullScreen: Types.bool,
   readOnly: Types.bool
 };
 
 PlainMarkdownInput.defaultProps = {
   extensions: [],
   value: '',
-  fullScreen: false,
   onFullScreen: () => {},
   onChange: () => {},
   readOnly: false
