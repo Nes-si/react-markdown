@@ -37,7 +37,7 @@ class MarkdownInputScope extends React.Component {
           Show
         </Button>
         <Modal show={this.state.show}
-               onHide={this.hideModal}
+          onHide={this.hideModal}
         >
           <Modal.Header closeButton={true}>
             Modal Test
