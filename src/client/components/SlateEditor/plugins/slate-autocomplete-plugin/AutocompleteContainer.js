@@ -35,15 +35,13 @@ class AutocompleteContainer extends React.Component {
   };
 
   componentWillReceiveProps = (nextProps) => {
-    if (nextProps.state.isFocused) {
       this.searchItems(nextProps);
       if (typeof this.state.selectedIndex !== 'undefined' &&
         (this.props.state.startOffset === nextProps.state.startOffset) &&
         (this.props.state.startText.text === nextProps.state.startText.text) &&
-        nextProps.state.startText.text) {
+        nextProps.state.startText.text && nextProps.state.isFocused) {
         this.handleSelectItem(this.state.selectedIndex);
       }
-    }
   };
 
   matchExtension = (extensions, token) => {
@@ -168,7 +166,7 @@ class AutocompleteContainer extends React.Component {
         onKeyDown={this.handleKeyDown}
         ref={this.handleRef}
       >
-        {show && state.isFocused ? (
+        {show ? (
           <AutocompleteWidget
             items={items}
             isLoading={isLoading}
