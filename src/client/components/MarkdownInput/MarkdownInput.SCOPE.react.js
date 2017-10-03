@@ -14,12 +14,7 @@ export default
 class MarkdownInputScope extends React.Component {
   state = {
     markdownExample: text,
-    updatedMarkdown: '',
     show: true
-  };
-
-  handleValueChange = (value) => {
-    this.setState({ updatedMarkdown: value });
   };
 
   showModal = () => {
