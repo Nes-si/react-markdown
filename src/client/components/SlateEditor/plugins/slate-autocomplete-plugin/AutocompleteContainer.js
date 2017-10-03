@@ -39,7 +39,7 @@ class AutocompleteContainer extends React.Component {
     if (typeof this.state.selectedIndex !== 'undefined' &&
       (this.props.state.startOffset === nextProps.state.startOffset) &&
       (this.props.state.startText.text === nextProps.state.startText.text) &&
-      nextProps.state.startText.text && nextProps.state.isFocused) {
+      nextProps.state.startText.text) {
       this.handleSelectItem(this.state.selectedIndex);
     }
   };
@@ -159,14 +159,14 @@ class AutocompleteContainer extends React.Component {
 
   render() {
     const { show, selectedIndex, items, isLoading, isMouseIndexSelected, ref } = this.state;
-    const { children } = this.props;
+    const { children, state } = this.props;
 
     return (
       <div
         onKeyDown={this.handleKeyDown}
         ref={this.handleRef}
       >
-        {show ? (
+        {show && state.isFocused ? (
           <AutocompleteWidget
             items={items}
             isLoading={isLoading}
