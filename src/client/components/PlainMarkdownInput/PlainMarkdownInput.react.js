@@ -6,6 +6,8 @@ import schema from './slate/schema';
 import shortcuts from './slate/shortcuts';
 import { hasMultiLineSelection } from './slate/transforms';
 import './PlainMarkdownInput.less';
+import { parse } from './slate/tokenizer';
+import { autoScrollToTop } from './Utils';
 
 import {
   AutocompletePlugin,
@@ -30,6 +32,38 @@ import {
 import { SlateContent, SlateEditor, SlateToolbar, SlateToolbarGroup } from '../SlateEditor';
 import Plain from 'slate-plain-serializer';
 
+function getCopyText(state) {
+  const { startKey, startOffset, endKey, endOffset, texts } = state;
+  let resText;
+
+  if (startKey === endKey) {
+    resText = texts.get(0).text.slice(startOffset, endOffset);
+  } else {
+    let resTextArr = texts.map((el, ind) => {
+      if (ind === 0) {
+        return el.text.slice(startOffset);
+      } else if (ind === texts.size - 1) {
+        return el.text.slice(0, endOffset);
+      } else {
+        return el.text;
+      }
+    });
+    resText = resTextArr.join('\n');
+  }
+  return resText;
+}
+
+function copySelectionToClipboard(event, change) {
+  event.preventDefault();
+  const { state } = change;
+  const resText = getCopyText(state);
+  if (window.clipboardData) {
+    window.clipboardData.setData("Text", resText);
+  } else {
+    event.clipboardData.setData('text/plain', resText);
+  }
+}
+
 class PlainMarkdownInput extends React.Component {
   state = {
     editorState: '',
@@ -48,9 +82,32 @@ class PlainMarkdownInput extends React.Component {
   }
 
   handleNewValue(value) {
-    this.setState({
-      editorState: Plain.deserialize(value || '')
-    });
+    let editorState = Plain.deserialize(value);
+    let nodes = editorState.document.nodes.asMutable();
+    let nodesSize = nodes.size;
+    for (let i = 0; i < nodesSize; i++) {
+      this.setDataToNode(nodes, i);
+    }
+    editorState = this.setNodesToState(editorState, nodes);
+    this.setState({ editorState });
+  }
+
+  setDataToNode(nodes, numBlock, text) {
+    const currNode = nodes.get(numBlock).asMutable();
+    text = text || currNode.nodes.get(0).text; // eslint-disable-line
+    currNode.data = {
+      text,
+      tokens: parse(text),
+    };
+    nodes.set(numBlock, currNode.asImmutable());
+  }
+
+  setNodesToState(editorState, nodes) {
+    let editorStateMutable = editorState.asMutable();
+    editorStateMutable.document = editorStateMutable.document.asMutable();
+    editorStateMutable.document.nodes = nodes.asImmutable();
+    editorStateMutable.document = editorStateMutable.document.asImmutable();
+    return editorStateMutable.asImmutable();
   }
 
   handleChange = (obj) => {
@@ -58,9 +115,29 @@ class PlainMarkdownInput extends React.Component {
     // https://github.com/ianstormtaylor/slate/blob/master/packages/slate/Changelog.md#0220--september-5-2017
     let editorState = obj.state || obj;
 
+    let numBlock = -1;
+    let key = editorState.blocks.get(0).key;
+    let nodesSize = editorState.document.nodes.size;
+    for (let i = 0; i < nodesSize; i++) {
+      if (key === editorState.document.nodes.get(i).key) {
+        numBlock = i;
+        break;
+      }
+    }
+
+    if (numBlock !== -1) {
+      let text = editorState.texts.get(0).text;
+      let nodes = editorState.document.nodes.asMutable();
+      this.setDataToNode(nodes, numBlock, text);
+      editorState = this.setNodesToState(editorState, nodes);
+    }
     this.props.onChange(Plain.serialize(editorState));
 
     this.setState({ editorState });
+
+    setTimeout(() => {
+      autoScrollToTop();
+    }, 0);
   };
 
   handleFullScreen = () => {
@@ -72,8 +149,21 @@ class PlainMarkdownInput extends React.Component {
     this.props.onFullScreen(fullScreen);
   };
 
-  onKeyDown(event, data, state) {
-    return shortcuts(event, data, state);
+  handleKeyDown(event, data, state, editor) {
+    return shortcuts(event, data, state, editor);
+  }
+
+  handleCopy(event, data, change) {
+    copySelectionToClipboard(event, change);
+    return change;
+  }
+
+  handleCut(event, data, change) {
+    copySelectionToClipboard(event, change);
+    let { state } = change;
+    let { selection } = state;
+    change.deleteAtRange(selection);
+    return change;
   }
 
   render() {
@@ -96,6 +186,9 @@ class PlainMarkdownInput extends React.Component {
         fullScreen={fullScreen}
         schema={schema}
         onChange={this.handleChange}
+        onCopy={this.handleCopy}
+        onCut={this.handleCut}
+        onKeyDown={this.handleKeyDown}
         plugins={[
           AutocompletePlugin({ extensions: extensions, onChange: this.handleChange })
         ]}

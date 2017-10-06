@@ -1,23 +1,7 @@
 import React from 'react';
 import './Autocomplete.less';
 import Types from 'prop-types';
-
-function getClosestElemFromClass(elem, className) {
-  if (!elem.parentElement) {
-    return null;
-  }
-  if (elem.parentElement.classList.contains(className)) {
-    return elem.parentElement;
-  }
-  return getClosestElemFromClass(elem.parentElement, className)
-}
-
-function getSlateEditor(selection) {
-  if (selection.anchorNode.parentNode && selection.anchorNode.parentNode.closest) {
-    return selection.anchorNode.parentNode.closest('.react-markdown--slate-content__editor');
-  }
-  return getClosestElemFromClass(selection.anchorNode.parentNode, 'react-markdown--slate-content__editor');
-}
+import { getSlateEditor } from '../../../PlainMarkdownInput/Utils';
 
 const propTypes = {
   isMouseIndexSelected: Types.bool,
@@ -85,17 +69,25 @@ class AutocompleteWidget extends React.Component {
     if (!selection.anchorNode) {
       return;
     }
-    const slateEditor = getSlateEditor(selection);
-    let editorWidth = slateEditor.offsetWidth;
+
+    let editorWidth = this.props.restrictorRef.offsetWidth;
     let autocompleteWidth = this['items-ref'].offsetWidth;
-    let selectionRect = selection.getRangeAt(0).getBoundingClientRect();
+    let autocompleteHeight = this['items-ref'].offsetHeight;
+    let selectionRect = selection.getRangeAt(0).getBoundingClientRect(); // element with cursor
     let restrictorRect = this.props.restrictorRef.getBoundingClientRect();
     let lineHeight = selectionRect.bottom - selectionRect.top;
+
     let left = selectionRect.left - restrictorRect.left;
     left = editorWidth >= left + autocompleteWidth ? left : left - autocompleteWidth;
     left = left < 0 ? 0 : left;
+
     let top = selectionRect.top - restrictorRect.top + lineHeight + 4;
-    let showToTop = (top + maxHeight) > restrictorRect.bottom;
+    let offsetTop = selection.anchorNode.parentNode.offsetTop;
+    let slateEditor = getSlateEditor(selection);
+
+    slateEditor.style.overflow = 'hidden';
+
+    let showToTop = slateEditor.scrollTop + slateEditor.offsetHeight < offsetTop + autocompleteHeight;
 
     let position = {
       left: `${left}px`,
