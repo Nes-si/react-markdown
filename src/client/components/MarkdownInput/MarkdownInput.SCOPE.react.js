@@ -20,7 +20,16 @@ class MarkdownInputScope extends React.Component {
     this.setState({ updatedMarkdown: value });
   };
 
+  updateValue = (e) => {
+    this.setState({ updatedValue: e.target.value });
+  };
+
   render() {
-    return this._renderChildren();
+    return (
+      <div>
+        <input type="text" onChange={this.updateValue}/>
+        {this._renderChildren()}
+      </div>
+    );
   }
 }
