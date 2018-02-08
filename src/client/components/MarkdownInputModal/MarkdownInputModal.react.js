@@ -35,7 +35,7 @@ class MarkdownInputModal extends React.Component {
   };
 
   // we save callback to have an opportunity to insert value in the right place from the modal
-  handleButtonPress = ({insertAtCursorPosition}) => {
+  handleButtonPress = ({ insertAtCursorPosition }) => {
     this.insertAtCursorPosition = insertAtCursorPosition;
     this.refs.demoModal.show();
   }

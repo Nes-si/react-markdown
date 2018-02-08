@@ -14,7 +14,7 @@ export default class DemoModal extends Component {
   }
 
   state = {
-    show:false,
+    show: false,
   }
 
   show = () => {
