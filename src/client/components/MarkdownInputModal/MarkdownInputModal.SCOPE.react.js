@@ -45,6 +45,7 @@ class MarkdownInputModalScope extends React.Component {
           Show
         </Button>
         <Modal
+          enforceFocus={false}
           className={modalClasses}
           show={this.state.show}
           onHide={this.handleHideModal}

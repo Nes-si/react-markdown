@@ -39,7 +39,7 @@ Configurable buttons in toolbar.
 
 ### handleButtonPress definition
 
-function (optional) that is called on when the user presses the button, the function gets the object as a parameter 
+function (optional) that is called on when the user presses the button, the function gets the object as a parameter
 (see description below) that contains the following info:
 
 | Name                    | Type            | Description                                                                                 |
@@ -60,20 +60,6 @@ function (optional) that is called on when the user presses the button, the func
     readOnly={false}
     locale='de'
     additionalButtons={[
-      {
-        iconElement: (<i className="fa fa-search"></i>),
-        handleButtonPress({ value, insertAtCursorPosition }) {
-          insertAtCursorPosition('#Product.new');                 
-        },
-        label: 'Product'
-      },
-      {
-        iconElement: (<i className="fa fa-search"></i>),
-        handleButtonPress({ value, insertAtCursorPosition }) {
-          insertAtCursorPosition('$Term.new');                 
-        },
-        label: 'Term'
-      }
     ]}
     extensions={[
       {
