@@ -60,6 +60,13 @@ function (optional) that is called on when the user presses the button, the func
     readOnly={false}
     locale='de'
     additionalButtons={[
+      {
+        iconElement: (<i className="fa fa-search"></i>),
+        handleButtonPress({ value, insertAtCursorPosition }) {
+          insertAtCursorPosition('$Term.new');                 
+        },
+        label: 'Term'
+      }
     ]}
     extensions={[
       {
