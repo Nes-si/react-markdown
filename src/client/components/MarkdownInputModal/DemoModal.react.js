@@ -22,8 +22,11 @@ export default class DemoModal extends Component {
   }
 
   pasteValue = (e) => {
-    this.props.onSelect("BOOM!");
     this.setState({ show: false });
+
+    setTimeout(() => {
+      this.props.onSelect("BOOM!");
+    }, 500)
   }
 
   render() {

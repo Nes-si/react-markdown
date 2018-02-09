@@ -186,7 +186,7 @@ class PlainMarkdownInput extends React.Component {
         let editorState = setSelectionToState(this.state.editorState, selection);
         this.setState({ editorState });
       }
-    }, 500);
+    }, 0);
   };
 
   handleFullScreen = () => {
