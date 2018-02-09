@@ -172,18 +172,16 @@ class PlainMarkdownInput extends React.Component {
       editorState = this.setNodesToState(editorState, nodes);
     }
     this.props.onChange(Plain.serialize(editorState));
-    if (isSetFocus) {
-      let editorState = setSelectionToState(this.state.editorState, selection);
-    }
+
     this.setState({ editorState });
 
     setTimeout(() => {
       autoScrollToTop();
-      // if (isSetFocus) {
-      //   let editorState = setSelectionToState(this.state.editorState, selection);
-      //   this.setState({ editorState });
-      // }
-    }, 10);
+      if (isSetFocus) {
+        let editorState = setSelectionToState(this.state.editorState, selection);
+        this.setState({ editorState });
+      }
+    }, 500);
   };
 
   handleFullScreen = () => {
@@ -333,12 +331,6 @@ class PlainMarkdownInput extends React.Component {
   insertAtCursorPosition(insertedText) {
     let change = this.state.editorState.change();
     change.delete().insertText(insertedText).focus();
-
-    // setTimeout(() => {
-    //   let change = this.state.editorState.change();
-    //   change.focus();
-    //   this.handleChange(change.state, true);
-    // }, 500);
     return this.handleChange(change.state, true);
   }
 
